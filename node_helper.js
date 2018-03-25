@@ -13,14 +13,13 @@ module.exports = NodeHelper.create({
         console.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 
         if (notification === 'GET_BMP_DATA') {
-            let data = this.getBmpData();
-            self.sendSocketNotification('BMP_DATA_RESULT', data);
+            this.getBmpData();
         }
 
     },
 
     getBmpData: function () {
-
+        let self = this;
         let options = {
             mode: 'json',
             scriptPath: 'modules/MMM-BMP-sensor/python_lib',
@@ -30,6 +29,7 @@ module.exports = NodeHelper.create({
           if (err) throw err;
           // results is an array consisting of messages collected during execution
           console.log('adafruit_python_bpm.py results: %j', results[0]);
+          self.sendSocketNotification('BMP_DATA_RESULT', results[0]);
         });
     }
 });

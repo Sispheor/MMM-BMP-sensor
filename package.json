@@ -1,0 +1,27 @@
+{
+  "name": "mmm-bmp-sensor",
+  "version": "1.0.0",
+  "description": "Get pressure from BMP sensor",
+  "main": "MMM-BMP-sensor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sispheor/MMM-BMP-sensor.git"
+  },
+  "keywords": [
+    "sensor",
+    "bmp",
+    "barometer"
+  ],
+  "author": "Nicolas Marcq",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sispheor/MMM-BMP-sensor/issues"
+  },
+  "homepage": "https://github.com/Sispheor/MMM-BMP-sensor#readme",
+  "dependencies": {
+    "python-shell": "^0.5.0"
+  }
+}

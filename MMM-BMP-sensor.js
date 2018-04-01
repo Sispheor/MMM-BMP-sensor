@@ -12,13 +12,19 @@ Module.register("MMM-BMP-sensor", {
         this.getNewBmpData();
     },
 
+    getScripts: function() {
+        return [
+            this.file("node_modules/canvas-gauges/gauge.min.js")
+        ];
+    },
+
     getDom: function () {
         let wrapper = document.createElement("div");
 
         if (!this.loaded) {
-          wrapper.innerHTML = "Loading sensor data...";
-          wrapper.className = "dimmed light small";
-          return wrapper;
+            wrapper.innerHTML = "Loading sensor data...";
+            wrapper.className = "dimmed light small";
+            return wrapper;
         }
 
         // Start building table.
@@ -36,7 +42,7 @@ Module.register("MMM-BMP-sensor", {
         temperatureCell1.innerHTML = "Temperature";
         temperatureRow.appendChild(temperatureCell1);
         let temperatureCell2 = document.createElement("td");
-        temperatureCell2.innerHTML = this.result.temperature;
+        temperatureCell2.innerHTML = this.result.temperature + " °C";
         temperatureRow.appendChild(temperatureCell2);
         dataTable.appendChild(temperatureRow);
 
@@ -45,7 +51,7 @@ Module.register("MMM-BMP-sensor", {
         altitudeCell1.innerHTML = "Altitude";
         altitudeRow.appendChild(altitudeCell1);
         let altitudeCell2 = document.createElement("td");
-        altitudeCell2.innerHTML = this.result.altitude;
+        altitudeCell2.innerHTML = this.result.altitude + " m";
         altitudeRow.appendChild(altitudeCell2);
         dataTable.appendChild(altitudeRow);
 
@@ -69,6 +75,31 @@ Module.register("MMM-BMP-sensor", {
 
         // add the table to the view
         wrapper.appendChild(dataTable);
+
+        // add a gauge
+        let gauge = new LinearGauge({
+            renderTo: document.createElement('canvas'),
+            width: 160,
+            height: 600,
+            borderRadius: 20,
+            borders: 0,
+            barStrokeWidth: 20,
+            minValue: 940,
+            maxValue: 1080,
+            minorTicks: 10,
+            majorTicks: [960,970,980,990,1000,1010,1020,1030,1040,1050,1060],
+            value: this.result.pressure/100,
+            units: "hPa",
+            colorPlate: "black",
+            colorNeedle: "white",
+            tickSide: "left",
+            numberSide: "left",
+            needleSide: "left",
+        });
+
+
+        wrapper.appendChild(gauge.options.renderTo);
+        gauge.draw();
 
         return wrapper;
     },

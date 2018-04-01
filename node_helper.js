@@ -25,11 +25,15 @@ module.exports = NodeHelper.create({
             scriptPath: 'modules/MMM-BMP-sensor/python_lib',
         };
 
-        PythonShell.run('adafruit_python_bpm.py', options, function (err, results) {
-          if (err) throw err;
-          // results is an array consisting of messages collected during execution
-          console.log('adafruit_python_bpm.py results: %j', results[0]);
-          self.sendSocketNotification('BMP_DATA_RESULT', results[0]);
-        });
+        // testing returns
+        let returnedData =  {"sealevel_pressure":"98029.00","pressure":"98018.00","altitude":"277.84","temperature":"22.90"}
+        self.sendSocketNotification('BMP_DATA_RESULT', returnedData);
+
+        // PythonShell.run('adafruit_python_bpm.py', options, function (err, results) {
+        //   if (err) throw err;
+        //   // results is an array consisting of messages collected during execution
+        //   console.log('adafruit_python_bpm.py results: %j', results[0]);
+        //   self.sendSocketNotification('BMP_DATA_RESULT', results[0]);
+        // });
     }
 });

@@ -14,7 +14,8 @@ Module.register("MMM-BMP-sensor", {
 
     getScripts: function() {
         return [
-            this.file("node_modules/canvas-gauges/gauge.min.js")
+            this.file("node_modules/canvas-gauges/gauge.min.js"),
+            this.file('node_modules/chart.js/dist/Chart.min.js'),
         ];
     },
 
@@ -74,7 +75,7 @@ Module.register("MMM-BMP-sensor", {
         dataTable.appendChild(pressureRow);
 
         // add the table to the view
-        wrapper.appendChild(dataTable);
+        // wrapper.appendChild(dataTable);
 
         // add a gauge
         let gauge = new LinearGauge({
@@ -96,11 +97,45 @@ Module.register("MMM-BMP-sensor", {
             numberSide: "left",
             needleSide: "left",
         });
+        // wrapper.appendChild(gauge.options.renderTo);
+        // gauge.draw();
 
+        // create a chart
+        // Creating the canvas.
+        let ctx = document.createElement("canvas");
+        ctx.style.width = "400px";
+        // Adding the canvas to the document wrapper.
+        wrapper.appendChild(ctx);
 
-        wrapper.appendChild(gauge.options.renderTo);
-        gauge.draw();
+        let color = "rgba(255, 255, 255, 0.8)";
 
+        let data=  {
+            labels: ["-6h", "-5h", "-4h", "-3h", "-2h", "-1h", "Now"],
+            datasets: [{
+                borderColor: color,
+                data: [920, 980, 975, 966, 1000, 990, 979],
+            }]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        time: {
+                            unit: 'hour',
+
+                        }
+                    }]
+                }
+            }
+        });
+
+        // return the main div
         return wrapper;
     },
 

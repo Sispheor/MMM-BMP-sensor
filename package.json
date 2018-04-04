@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Sispheor/MMM-BMP-sensor#readme",
   "dependencies": {
     "canvas-gauges": "^2.1.4",
+    "chart.js": "^2.7.2",
     "python-shell": "^0.5.0"
   }
 }

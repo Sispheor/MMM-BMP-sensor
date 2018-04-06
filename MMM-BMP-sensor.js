@@ -108,34 +108,59 @@ Module.register("MMM-BMP-sensor", {
         wrapper.appendChild(ctx);
 
         let color = "rgba(255, 255, 255, 0.8)";
+        let color2 = "rgba(255, 255, 255, 0.2)";
+
 
         let data=  {
-            labels: ["-6h", "-5h", "-4h", "-3h", "-2h", "-1h", "Now"],
+            labels: [
+                new Date(2017,8,16,13,30),
+                new Date(2017,8,16, 13,35),
+                new Date(2017,8,16, 13, 40)
+            ],
             datasets: [{
+                data: [980, 1000, 970],
                 borderColor: color,
-                data: [920, 980, 975, 966, 1000, 990, 979],
             }]
+        };
+
+        let options = {
+            legend: {
+                display: false
+            },
+            fill: false,
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    time: {
+                        unit: 'minute',
+                        distribution: 'series',
+                        displayFormats: {
+                             minute: 'HH:mm'
+                        }
+                    },
+                    gridLines: {
+                        color: color2
+                    }
+
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        color: color2
+                    }
+                }]
+            }
         };
 
         var myChart = new Chart(ctx, {
             type: 'line',
             data: data,
-            options: {
-                legend: {
-                    display: false
-                },
-                scales: {
-                    yAxes: [{
-                        time: {
-                            unit: 'hour',
-
-                        }
-                    }]
-                }
-            }
+            options: options
         });
 
-        // return the main div
+// return the main div
         return wrapper;
     },
 

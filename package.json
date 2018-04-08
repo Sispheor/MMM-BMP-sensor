@@ -24,6 +24,7 @@
   "dependencies": {
     "canvas-gauges": "^2.1.4",
     "chart.js": "^2.7.2",
+    "nedb": "^1.8.0",
     "python-shell": "^0.5.0"
   }
 }

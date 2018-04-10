@@ -44,7 +44,7 @@ Module.register("MMM-BMP-sensor", {
             nextLoad = delay;
         }
         if (this.config.debug){
-            console.log("[MMM-bmp-sensor] Next update in " + this.updateIntervalMilliseconds + " milliseconds");
+            console.log("[MMM-BMP-sensor] Next update in " + this.updateIntervalMilliseconds + " milliseconds");
         }
         let self = this;
 
@@ -69,10 +69,6 @@ Module.register("MMM-BMP-sensor", {
             return wrapper;
         }
 
-
-        if (this.config.debug){
-            console.log("[MMM-bmp-sensor] Database not empty");
-        }
         let lastBmpData = this.currentDatabase[this.currentDatabase.length - 1];
         let lastPressureHpa = lastBmpData.bmpData.pressure / 100;
 
@@ -180,7 +176,10 @@ Module.register("MMM-BMP-sensor", {
             let labels = [];
             let bmpDataArray = [];
             for (let i = 0; i < this.currentDatabase.length; i++) {
-                console.log(this.currentDatabase[i]);
+                if (this.config.debug){
+                    console.log(this.currentDatabase[i]);
+                }
+
                 labels.push(this.currentDatabase[i].date);
                 bmpDataArray.push(Math.round(this.currentDatabase[i].bmpData.pressure / 100));
             }
@@ -257,22 +256,19 @@ Module.register("MMM-BMP-sensor", {
      * @param {string} intervalString - The interval to convert into second of the book.
      */
     getUpdateIntervalMillisecondFromString: function(intervalString) {
-        // console.log("[MMM-quote-of-the-day] testing string: "+ intervalString)
         // the string must contains a number followed by a letter s or m or h or d. E.g: 50m
         let regexString = new RegExp("^\\d+[smhd]{1}$");
         let updateIntervalMillisecond = 0;
 
         if (regexString.test(intervalString)){
-            console.log("[MMM-quote-of-the-day] valid updateInterval");
+            console.log("[MMM-BMP-sensor] valid updateInterval");
             // split the integer from the letter
             let regexInteger = "^\\d+";
             let integer = intervalString.match(regexInteger);
-            // console.log("[MMM-quote-of-the-day] integer: " + integer);
 
             // now get the letter
             let regexLetter = "[smhd]{1}$";
             let letter = intervalString.match(regexLetter);
-            // console.log("[MMM-quote-of-the-day] letter: '" + letter + "'");
 
             // convert the letter into second
             let millisecondsMultiplier = 1000;
@@ -295,7 +291,7 @@ Module.register("MMM-BMP-sensor", {
             updateIntervalMillisecond = millisecondsMultiplier * integer
 
         }else{
-            console.log("[MMM-quote-of-the-day] invalid updateInterval, set default to 1 day");
+            console.log("[MMM-BMP-sensor] invalid updateInterval, set default to 1 day");
             // set default interval to 1 day
             updateIntervalMillisecond = 1000 * 60 * 60 * 24
         }

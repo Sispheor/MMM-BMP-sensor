@@ -63,5 +63,6 @@ Example of `updateInterval`:
 - **4h**: get new barometer metrics every 4 hours
 - **30m**: get new barometer metrics every 30 minutes
 
+## Database clean
 
-
+You clean get a fresh database by deleting the file `/tmp/mmm-bpm-datastore`

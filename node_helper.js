@@ -24,7 +24,7 @@ module.exports = NodeHelper.create({
             this.helperConfig = payload
         }
         if (notification === 'GET_NEW_BMP_DATA') {
-            this.saveNewBmpEntryInDatabase();
+            this.getBmpData();
         }
 
     },
@@ -36,46 +36,30 @@ module.exports = NodeHelper.create({
             scriptPath: 'modules/MMM-BMP-sensor/python_lib',
         };
 
-        // testing returns
-        return {
-            "sealevel_pressure": "98029.00",
-            "pressure": "98018.00",
-            "altitude": "277.84",
-            "temperature": "22.90"
-        };
-        // self.sendSocketNotification('BMP_DATA_RESULT', returnedData);
-        // return returnedData
+        PythonShell.run('adafruit_python_bpm.py', options, function (err, results) {
+          if (err) throw err;
+          // results is an array consisting of messages collected during execution
+          if (self.helperConfig.debug){
+              console.log('adafruit_python_bpm.py results: %j', results[0]);
+          }
+          let bmpData = results[0];
+          let dateNow = new Date();
 
-        // PythonShell.run('adafruit_python_bpm.py', options, function (err, results) {
-        //   if (err) throw err;
-        //   // results is an array consisting of messages collected during execution
-        //   console.log('adafruit_python_bpm.py results: %j', results[0]);
-        //   self.sendSocketNotification('BMP_DATA_RESULT', results[0]);
-        // });
-    },
+            let datedBmp = {
+                date: dateNow,
+                bmpData: bmpData
+            };
 
-    saveNewBmpEntryInDatabase: function () {
-        /**
-         * This method will insert the current pressure and insert it into the database with the current timestamp
-         */
-        let self = this;
-        let bmpData = this.getBmpData();
-        let dateNow = new Date();
+            self.db.insert(datedBmp, function (err, newBmpData) {
+                if (self.helperConfig.debug){
+                    console.log("New data saved: " + newBmpData);
+                }
+            });
 
-        let datedBmp = {
-            date: dateNow,
-            bmpData: bmpData
-        };
+            // clean old data
+            self.cleanOutdatedBmpData();
 
-        this.db.insert(datedBmp, function (err, newBmpData) {
-            if (self.helperConfig.debug){
-                console.log("New data saved: " + newBmpData);
-            }
         });
-
-        // clean old data
-        this.cleanOutdatedBmpData();
-
     },
 
     cleanOutdatedBmpData: function () {
@@ -86,7 +70,7 @@ module.exports = NodeHelper.create({
         let limitDateBmpData = new Date();
         limitDateBmpData.setMilliseconds(limitDateBmpData.getMilliseconds() - this.helperConfig.timeLimitKeepBmpData);
         if (this.helperConfig.debug){
-            console.log("limitDateBmpData: " + limitDateBmpData);
+            console.log("[MMM-BMP-sensor] limitDateBmpData: " + limitDateBmpData);
         }
 
         let self = this;
@@ -95,7 +79,7 @@ module.exports = NodeHelper.create({
                 if (bmpData[i].date <  limitDateBmpData ){
                     self.db.remove(bmpData[i], {}, function (err, numRemoved){
                         if (self.helperConfig.debug){
-                            console.log(numRemoved + "removed");
+                            console.log("[MMM-BMP-sensor]" + numRemoved + "removed");
                         }
                     });
                 }else{

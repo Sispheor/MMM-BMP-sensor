@@ -66,3 +66,58 @@ Example of `updateInterval`:
 ## Database clean
 
 You clean get a fresh database by deleting the file `/tmp/mmm-bpm-datastore`
+
+## Hardware configuration
+
+### Active I2C
+
+The BMP180 is an i2c board. The diagram below shows the location of the i2c pins on the Raspberry Pi.
+
+<p align="center">
+    <img src="images/i2c_raspberry.png">
+</p>
+
+Installed required packages
+```
+sudo apt-get install i2c-tools
+sudo apt-get install python-smbus
+```
+
+Run `sudo raspi-config` and active the i2c support from **Interfacing Options --> I2C --> Enable**
+
+Then reboot your Rpi to take effect.
+
+### Plugging in the BMP180
+
+The diagram below show how to connect the BMP180 to your Pi.
+
+<p align="center">
+    <img src="images/BMP180_rpi_connect.png">
+</p>
+
+
+| Name | Cable color | Description  |
+|------|-------------|--------------|
+| 3.3V | RED         | Power supply |
+| SDA  | YELLOW      | Data         |
+| SCL  | BLUE        | clock signal |
+| GND  | BLACK       | Ground       |
+
+
+Then, type the following to check that your BMP sensor is well recognized
+```
+sudo i2cdetect -y 1
+```
+
+Example output, here the BMP sensor is using address 0x77.
+```
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- 77
+```

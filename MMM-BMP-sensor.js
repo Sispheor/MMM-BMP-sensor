@@ -1,8 +1,8 @@
 Module.register("MMM-BMP-sensor", {
 
     defaults: {
-        timeLimitKeepBmpData: "1h",
         updateInterval: "1h",
+        timeLimitKeepBmpData: "6h",
         debug: false,
         showTableBmpInfo: true,
         showTemperatureRow: true,
